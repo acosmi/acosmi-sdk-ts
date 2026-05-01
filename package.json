@@ -1,6 +1,6 @@
 {
-  "name": "acosmi-sdk-ts",
-  "version": "1.0.0",
+  "name": "@acosmi/sdk-ts",
+  "version": "1.0.1",
   "description": "Acosmi 模型网关 TypeScript SDK — 双格式 (Anthropic + OpenAI) 多端 (浏览器 / Node ≥18 / Deno / Bun)。Go SDK 全量端口, 1.0 稳定测试版。",
   "type": "module",
   "main": "./dist/node/index.cjs",
@@ -35,7 +35,7 @@
     },
     "./package.json": "./package.json"
   },
-  "files": ["dist", "README.md", "LICENSE"],
+  "files": ["dist", "README.md", "CHANGELOG.md", "LICENSE"],
   "scripts": {
     "build": "tsup",
     "test": "vitest run",
@@ -43,7 +43,8 @@
     "lint": "eslint src --ext .ts",
     "format": "prettier --write \"src/**/*.{ts,json}\"",
     "typecheck": "tsc --noEmit",
-    "prepublishOnly": "npm run typecheck && npm run lint && npm test && npm run build"
+    "test:pack": "node scripts/smoke-pack.mjs",
+    "prepublishOnly": "npm run typecheck && npm run lint && npm test && npm run build && npm run test:pack"
   },
   "engines": {
     "node": ">=18"
@@ -62,11 +63,11 @@
   "author": "Acosmi",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/acosmi/acosmi-sdk-ts.git"
+    "url": "git+https://github.com/acosmi/sdk-ts.git"
   },
-  "homepage": "https://github.com/acosmi/acosmi-sdk-ts#readme",
+  "homepage": "https://github.com/acosmi/sdk-ts#readme",
   "bugs": {
-    "url": "https://github.com/acosmi/acosmi-sdk-ts/issues"
+    "url": "https://github.com/acosmi/sdk-ts/issues"
   },
   "publishConfig": {
     "access": "public"
