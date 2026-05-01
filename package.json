@@ -1,5 +1,5 @@
 {
-  "name": "acosmi-sdk-ts",
+  "name": "@acosmi/sdk-ts",
   "version": "1.0.0",
   "description": "Acosmi 模型网关 TypeScript SDK — 双格式 (Anthropic + OpenAI) 多端 (浏览器 / Node ≥18 / Deno / Bun)。Go SDK 全量端口, 1.0 稳定测试版。",
   "type": "module",
@@ -62,11 +62,11 @@
   "author": "Acosmi",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/acosmi/acosmi-sdk-ts.git"
+    "url": "git+https://github.com/acosmi/sdk-ts.git"
   },
-  "homepage": "https://github.com/acosmi/acosmi-sdk-ts#readme",
+  "homepage": "https://github.com/acosmi/sdk-ts#readme",
   "bugs": {
-    "url": "https://github.com/acosmi/acosmi-sdk-ts/issues"
+    "url": "https://github.com/acosmi/sdk-ts/issues"
   },
   "publishConfig": {
     "access": "public"
