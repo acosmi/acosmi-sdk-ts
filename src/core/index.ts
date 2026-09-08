@@ -36,6 +36,19 @@ export {
 // === TokenStore ===
 export {
   type TokenStore,
+  type CredentialAuthorityConfig,
+  type CredentialCASExpected,
+  type CredentialCASResult,
+  type CredentialLoginAttempt,
+  type CredentialMutationReceipt,
+  type CredentialPrincipal,
+  type CredentialReason,
+  type CredentialRefreshOperation,
+  type CredentialRequestOwner,
+  type CredentialSnapshot,
+  type CredentialState,
+  type VerifiedCredentialIdentity,
+  type VersionedCredentialStore,
   FileTokenStore,
   LocalStorageTokenStore,
   InMemoryTokenStore,
@@ -56,3 +69,5 @@ export {
 
 // === Client × sanitize 胶水 — side-effect import 注入 applyRequestSanitizers 等到 Client.prototype ===
 import './sanitize-bridge';
+
+export type { CredentialStateNotification } from './credentials';

@@ -1,3 +1,4 @@
+import { InMemoryTokenStore } from '../src/core/store';
 // C2 (P2-2): OAuth 链路使用注入的 fetchImpl, 不落全局 fetch。
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
@@ -116,7 +117,7 @@ describe('Client.forceRefresh 全链路走注入 fetchImpl', () => {
       throw new Error(`unexpected url ${u}`);
     }) as unknown as typeof fetch;
 
-    const client = new Client({ serverURL: 'https://nexus.test', fetchImpl: mock });
+    const client = new Client({ serverURL: 'https://nexus.test', fetchImpl: mock, store: new InMemoryTokenStore() });
     client.tokens = {
       access_token: 'old-AT',
       refresh_token: 'old-RT',
