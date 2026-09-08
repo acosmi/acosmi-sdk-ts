@@ -7,7 +7,8 @@
 ## 状态
 
 - **主实现 / 事实标准**：本 TS SDK 现为 Acosmi SDK 的主力实现。Go SDK [acosmi-sdk-go](https://github.com/acosmi/acosmi-sdk-go) 已暂停维护，待 TS 稳定后再从 TS 反向翻译补齐。
-- **当前版本：`2.18.0`**（`ManagedModel.thinking_levels` 类型面对齐，2026-08-29）。
+- **当前版本：`2.19.1`**（认证生命周期与上游错误归属修复，2026-09-08）。
+- **`v2.19.1`**：可选 versioned 凭据存储、原子刷新与本地退出，支持将 HTTP / WebSocket 绑定到固定登录身份；外部凭据使用独立的 external 模式。所有模式仅在完整网关错误合同证明用户访问凭据失效且请求未接收时自动刷新重试，普通 401 原样返回。versioned 模式要求上游 metadata 的认证合同为 2、网关错误合同为 1；默认 legacy 存储接口继续可用。详见 [CHANGELOG](./CHANGELOG.md)。
 - **`v2.18.0`（加性类型发布）**：`ManagedModel` 新增可选字段 `thinking_levels?: string[]` —— 网关下发的**升序思考档位 id 列表**（`ThinkingOff`/`ThinkingHigh`/`ThinkingMax` 的子集）。`listModels` 对它原样透传，公开签名向后兼容、零行为变化；`[]` = 该模型无思考档，`undefined` = 旧网关未播报（按"未知"处理，严禁自行推档）。详见〈思考档位 `thinking_levels`〉。
 - **`v2.17.0`（安全修复发布）**：桌面 loopback `authorize()` 对 `/callback` 的**一切形态**（成功 / OAuth error / 畸形）先行校验 CSRF `state`，且必须"恰好一个"并严格等值 —— 缺失、重复（含重复的正确值）、错值一律以稳定错误码 `state_mismatch` 拒绝本次登录；此前携带 OAuth error 的回调绕过 state 直接结算 `auth_denied`，本机任意进程零知识即可打断/塑形等待中的登录，且 `?code=…&state=<正确值>&state=x` 这类重复参数可蒙混通过。`finally` 补 `closeIdleConnections()`，每条终止路径以端口完全关闭收尾。公开 API 签名零变化；回归闸门 `test/auth/desktop-loopback-state.test.ts` 十路终止矩阵。
 - **`v2.15.0`（加性兼容发布）**：新增 `classifySourcesEvent()`、`SourcesEventParseResult` 与稳定 issue code，把 `not_sources`、合法 `empty_sources`、非空 `sources`、`malformed_sources` 明确分开。既有 `parseSourcesEvent()` 的代码路径、宽松判定、`null` 条件和返回对象形状保持原样；现有 consumer 无需改动，新 consumer 才选择严格 API。

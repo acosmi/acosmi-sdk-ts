@@ -5,6 +5,16 @@ All notable changes to `@acosmi/sdk-ts` will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.19.1] - 2026-09-08 — 认证生命周期与上游错误归属修复
+
+- 新增显式 `credentialMode: 'versioned'`，通过调用方提供的 `VersionedCredentialStore` 原子读写凭据。SDK 统一负责登录、身份确认、刷新和本地退出；多个进程同时刷新时使用同一份持久状态，刷新结果不确定时要求重新登录。
+- 新增 `credentialRequestOwner`，将请求绑定到构造时的存储实例、登录会话和已验证身份。同一身份正常刷新继续可用，已退出或被替换的客户端不能借用另一个账号的凭据。WebSocket 票据、连接与晚到事件遵守同一归属。
+- 新增 `logoutCredential(signal?, expected?)` 本地提交结果与独立远端吊销结果。过期的退出操作不能清除新登录；调用方可订阅不含凭据的状态通知。
+- 新增显式 `credentialMode: 'external'` 与 `accessTokenProvider`，外部凭据不进入 SDK 刷新存储。非 legacy 模式将凭据限制在配置的同一源。
+- HTTP 401 只有完整错误合同明确归属用户访问凭据、且请求未被接收时，才触发一次刷新和重试。提供商拒绝、已接收请求及缺失合同的错误不再被误当成登录过期。OpenAI 流式错误作为终态保留。
+
+默认仍为 `legacy` 模式，现有存储接口继续可用。上述 401 判据适用于所有模式；旧网关未提供完整错误合同时，调用方会收到原错误而不会自动重放。启用 versioned 模式前，上游 OAuth metadata 必须声明 `crabcode_auth_contract_version=2` 与 `gateway_error_contract_version=1`；不支持时明确拒绝登录，不能静默降级。
+
 ## [2.19.0] - 2026-09-01 — 网关消费请求 ID 透出（跨系统关联）
 
 **客户端的失败与上游的成功之间此前没有任何共同标识符。** 2026-08-31 事故里，GUI 上每次托管 WebSearch 都失败，而同一时刻上游 6 次搜索全部成功、6 条计费行已落库；定位花掉整场审计，因为只能靠时间戳与模型名人工对齐。网关现在把 `consumeRequestID`（即 `managed_model_usage_logs.request_id`，能 join 到计费行的那个键）放进 `X-Acosmi-Request-Id` 响应头，本版把它透出给消费方。全部改动 additive，旧调用点零改动。
